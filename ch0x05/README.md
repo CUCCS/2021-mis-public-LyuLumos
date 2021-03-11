@@ -18,7 +18,7 @@
 1. 官网下载 Android Studio 安装包进行安装。
 2. 使用内置的JDK和SDK。这部分比较简单，基本上就是一直点下去就可以了。安装最后会报一个安装 Intel x86 Atom System 失败的错误，暂时先不用管。（不确定是不是AMD CPU专属问题）
 
-    ![](imgs/SDK%20version.png)
+    ![](imgs/SDKversion.png)
 
 3. 开启虚拟化。由于Win10家庭版是没有hyper-v功能的，所以需要进行一些操作。
 
@@ -33,11 +33,12 @@
 
     重启后发现“程序与功能”中出现了hyper-v功能，勾选该选项。
 
-    ![](imgs/Windows%20功能%20.png)
+    ![](imgs/WindowsFunction.png)
 
     然后就可以查看是否开启了虚拟化。如果未开启在BIOS里面设置一下就可以了。
 
-    ![](imgs/任务管理器.png)
+    ![](imgs/TaskCommander.png)
+
 
     可以在右下角看到虚拟化已开启。
 
@@ -71,7 +72,7 @@
 
     顺便给出官网的插件和内置版本对应。
 
-    ![](imgs/gradle对应关系.png)
+    ![](imgs/gradle_pluginversion.png)
 
     我使用的内置gradle。这里也简单说一下原理，方便手动安装。
 
