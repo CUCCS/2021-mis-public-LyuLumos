@@ -8,7 +8,7 @@
     - [**OpenWrt虚拟机的安装**](#openwrt虚拟机的安装)
     - [**OpenWrt配置与无线网卡的连接**](#openwrt配置与无线网卡的连接)
     - [**无线路由器/无线接入点（AP）配置**](#无线路由器无线接入点ap配置)
-  - [**实验中遇到的问题**](#实验中遇到的问题)
+  - [实验中遇到的问题](#实验中遇到的问题)
     - [**WSL2，AndroidStudio，VirtualBox关于hyper-v的兼容性问题**](#wsl2androidstudiovirtualbox关于hyper-v的兼容性问题)
     - [**系统报错：USB端口上的电涌 所需电量超出该端口所能提供的电量**](#系统报错usb端口上的电涌-所需电量超出该端口所能提供的电量)
     - [**安装并配置好之后，Network-Wireless没有实验所示模式选择，Enable后无法使用。**](#安装并配置好之后network-wireless没有实验所示模式选择enable后无法使用)
@@ -41,7 +41,7 @@
 
 以前配置过WSL2 Ubuntu 20.04环境，所以可以运行黄大提供的代码，但是Mac环境到Linux需要进行一些更改，更改要点如下：
 ```bash
-# 设置的环境变量带了后缀，vim批量替换以下即可
+# 设置的环境变量带了后缀，vim批量替换即可
 - VBoxManage
 + VBoxManage.exe
 # vboxnet0是Mac环境下的网卡，更改为VirtualBox Host-Only Ethernet Adapter。
@@ -51,7 +51,7 @@
 $ dos2unix file
 ```
 
-详细代码及注释见：[Setup-VM](code/setup-vm.sh)
+详细代码及单行注释见：[Setup-VM](code/setup-vm.sh)
 
 ![](imgs/install.png)
 
@@ -81,7 +81,7 @@ option ip6assign '60'
 
 之后就可以使用ssh连接到虚拟机了。
 
-![](imgs/ssh.png
+![](imgs/ssh.png)
 
 
 ### **OpenWrt配置与无线网卡的连接**
@@ -142,7 +142,8 @@ opkg install hostapd wpa-supplicant
 
 此时手机可以正常连接互联网。
 
-![]
+![](imgs/phone.PNG)
+
 ### **无线路由器/无线接入点（AP）配置**
 * 重置和恢复AP到出厂默认设置状态
   
@@ -155,19 +156,46 @@ opkg install hostapd wpa-supplicant
   （然后你装了半天的环境就没了
 
 * 设置AP的管理员用户名和密码
+
+
+
 * 设置SSID广播和非广播模式
+  
+  ![](imgs/HideESSID.PNG)
 * 配置不同的加密方式
+
+  ![](imgs/encryption.png)
 * 设置AP管理密码
+
+  ![](imgs/password.png)
 * 配置无线路由器使用自定义的DNS解析服务器 
+
+  ![](imgs/dnsServer.png)
+
 * 配置DHCP和禁用DHCP
+  
+  ![](imgs/dhcpConfig.PNG)
+
+  ![](imgs/dhcp.png)
+
+  
 * 开启路由器/AP的日志记录功能（对指定事件记录）
+
+  ![](imgs/log.PNG)
 * 配置AP隔离(WLAN划分)功能
+
+  ![](imgs/isolate.PNG)
 * 设置MAC地址过滤规则（ACL地址过滤器）
+  ![](imgs/macFilter.PNG)
 * 查看WPS功能的支持情况
 
+* 查看AP/无线路由器支持哪些工作模式
+
+  ![](imgs/mode.PNG)
+  
 
 
-## **实验中遇到的问题**
+## 实验中遇到的问题
 
 ### **WSL2，AndroidStudio，VirtualBox关于hyper-v的兼容性问题**
 做完第五次实验后，我的电脑升级到了专业版，由于第五章实验遗留下的环境开启了 `hyper-v` ，所以出现了 `VirtualBox` 无法打开的现象。但关闭 `hyper-v` 之后出现了 `Android Studio` 无法正常编译到AVD的现象，同时日常使用的 `WSL2-Ubuntu` 彻底无法打开。经搜索各软件对 `hyper-v` 的需求如下。
