@@ -189,9 +189,30 @@ opkg install hostapd wpa-supplicant
   ![](imgs/macFilter.PNG)
 * 查看WPS功能的支持情况
 
+  在 `/etc/config/wireless` 中添加
+  ```bash
+  + option wps_pushbutton '1'
+  ```
+  ![](imgs/wps.PNG)
+
 * 查看AP/无线路由器支持哪些工作模式
 
   ![](imgs/mode.PNG)
+
+* 使用手机连接不同配置状态下的AP对比实验
+* 使用路由器/AP的配置导出备份功能，尝试解码导出的配置文件
+
+  使用 `System/Backup - Generate Archives` 中的备份功能备份文件，下载到本地解压后发现是明文存储密码。
+
+  （注：在vim中运行 `!pwd` ，其中`/mnt`为WSL2中的Windows系统目录，代表此文件在Windows环境下。公开的密码已更改。）
+  ![](imgs/backup.png)
+
+  根据品牌搜索解码器未果。（不过都明文了还解什么码...
+* 复习VirtualBox的配置与使用
+  - 虚拟机镜像列表
+  - 设置虚拟机和宿主机的文件共享，实现宿主机和虚拟机的双向文件共享
+  - 虚拟机镜像备份和还原的方法
+  - 熟悉虚拟机基本网络配置，了解不同联网模式的典型应用场景
   
 
 
@@ -233,6 +254,8 @@ opkg install hostapd wpa-supplicant
 ```
 
 更换网卡后可以正常使用了。
+
+同时可以看到[openwrt配置与无线网卡的连接](#openwrt配置与无线网卡的连接)处因为使用过两个设备的原因会出现四个网卡，虽然不影响正常使用但是还是
 
 ## 致谢
 - [黄大](https://github.com/c4pr1c3) （这次实验贼麻烦老师，跪谢
