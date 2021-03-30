@@ -253,8 +253,8 @@ opkg install hostapd wpa-supplicant
 
 |软件/子系统|hyper-v需求|
 |----|----|
-|WSL|WSL不受影响，WSL2需要打开|
-|Android Studio|需要打开|
+|WSL|WSL不受影响，WSL2需要启用|
+|Android Studio|需要启用|
 |VirtualBox|6.1版本后可进行虚拟化，之前版本需要关闭|
 
 我目前采用的是 `开启hyper-v + VirtualBox全局虚拟化` 的方法，具体版本号见[实验环境](#实验环境)。

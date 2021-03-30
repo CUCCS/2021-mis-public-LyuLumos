@@ -4,6 +4,7 @@ VER="19.07.5" # openwrt version
 VDI_BASE="openwrt-x86-64-combined-squashfs.vdi" # 存储的镜像名称
 
 # 检查是否下载过镜像，防止多次下载
+# 实际上Ubuntu环境操作中中无-q，会造成多次下载和覆盖
 shasum -c img.sha256.sum -q >/dev/null 2>&1
 if [[ $? -ne 0 ]];then
   # 下载固件
@@ -22,8 +23,9 @@ if [[ $? -ne 0 ]];then
 
   if [[ $? -eq 1 ]];then
     # ref: https://openwrt.org/docs/guide-user/virtualization/virtualbox-vm#convert_openwrtimg_to_vbox_drive
-	# 如果上述操作未成功，
+	  # 如果上述操作未成功，用指定大小的块复制为新文件 openwrt-x86-64-combined-squashfs-padded.img
     dd if=openwrt-x86-64-combined-squashfs.img of=openwrt-x86-64-combined-squashfs-padded.img bs=128000 conv=sync
+    # 效果同19行
     VBoxManage.exe convertfromraw --format VDI openwrt-x86-64-combined-squashfs-padded.img "$VDI_BASE"
   fi
 fi
@@ -31,8 +33,10 @@ fi
 # 创建虚拟机
 VM="openwrt-$VER"
 # VBoxManage.exe list ostypes
+# 若现在无名为 ${VM} 的虚拟机则继续执行
 if [[ $(VBoxManage.exe list vms | cut -d ' ' -f 1 | grep -w "\"$VM\"" -c) -eq 0 ]];then
   echo "vm $VM not exsits, create it ..."
+  # 创建虚拟机，名称为 $VM， 类型为 Linux 2.6...(64bit)，放置在IoT组下
   VBoxManage.exe createvm --name $VM --ostype "Linux26_64" --register --groups "/IoT"
   # 创建一个 SATA 控制器
   VBoxManage.exe storagectl "$VM" --name "SATA" --add sata --controller IntelAHCI
@@ -48,6 +52,7 @@ if [[ $(VBoxManage.exe list vms | cut -d ' ' -f 1 | grep -w "\"$VM\"" -c) -eq 0 
   # 虚拟磁盘扩容
   VBoxManage.exe modifymedium disk --resize 10240 "$VDI_BASE"
 
+  # 这部分重复41-46行操作
   VBoxManage.exe storagectl "$VM" --name "SATA" --add sata --controller IntelAHCI
   VBoxManage.exe storageattach "$VM" --storagectl "SATA" --port 0 \
     --device 0 --type hdd --medium "$VDI_BASE"
