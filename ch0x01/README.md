@@ -13,6 +13,7 @@
     - [**系统报错：USB端口上的电涌 所需电量超出该端口所能提供的电量**](#系统报错usb端口上的电涌-所需电量超出该端口所能提供的电量)
     - [**安装并配置好之后，Network-Wireless没有实验所示模式选择，Enable后无法使用。**](#安装并配置好之后network-wireless没有实验所示模式选择enable后无法使用)
   - [致谢](#致谢)
+  - [参考](#参考)
 
 ## 实验目的
 
@@ -157,7 +158,9 @@ opkg install hostapd wpa-supplicant
 
 * 设置AP的管理员用户名和密码
 
+  仅找到设置密码界面。
 
+  ![](imgs/addPassword.PNG)
 
 * 设置SSID广播和非广播模式
   
@@ -195,11 +198,26 @@ opkg install hostapd wpa-supplicant
   ```
   ![](imgs/wps.PNG)
 
+  ![](imgs/wpsButton.png)
+
 * 查看AP/无线路由器支持哪些工作模式
 
   ![](imgs/mode.PNG)
 
 * 使用手机连接不同配置状态下的AP对比实验
+
+  - 广播模式和非广播模式
+  
+  关闭广播模式后，手机无法搜索到目标网络。
+  ![](imgs/ifHideESSID.png)
+  ![](imgs/ifHideESSIDPhone.png)
+
+  - 不同AP加密模式
+  
+  我的手机（HONOR V20）只能区分处WPA1或WPA2，无法区分出更精确的模式。
+
+  ![](imgs/WPA12.png)
+
 * 使用路由器/AP的配置导出备份功能，尝试解码导出的配置文件
 
   使用 `System/Backup - Generate Archives` 中的备份功能备份文件，下载到本地解压后发现是明文存储密码。
@@ -210,9 +228,21 @@ opkg install hostapd wpa-supplicant
   根据品牌搜索解码器未果。（不过都明文了还解什么码...
 * 复习VirtualBox的配置与使用
   - 虚拟机镜像列表
+  
+    ![](imgs/mirrors.png)
+
   - 设置虚拟机和宿主机的文件共享，实现宿主机和虚拟机的双向文件共享
+
+    ![](imgs/share.png)
   - 虚拟机镜像备份和还原的方法
+
+    ![](imgs/backupReback.png)
   - 熟悉虚拟机基本网络配置，了解不同联网模式的典型应用场景
+
+    下面图片分别是配置界面和不同模式的解释。
+
+    ![](imgs/network.png)
+    ![](imgs/networkSetting.png)
   
 
 
@@ -255,8 +285,18 @@ opkg install hostapd wpa-supplicant
 
 更换网卡后可以正常使用了。
 
-同时可以看到[openwrt配置与无线网卡的连接](#openwrt配置与无线网卡的连接)处因为使用过两个设备的原因会出现四个网卡，虽然不影响正常使用但是还是
+同时可以看到[openwrt配置与无线网卡的连接](#openwrt配置与无线网卡的连接)处因为使用过两个设备的原因会出现四个网卡，虽然不影响正常使用但是还是修改 `wireless` 文件中无效的网卡。
+
+![](imgs/deleteUseless.png)
 
 ## 致谢
 - [黄大](https://github.com/c4pr1c3) （这次实验贼麻烦老师，跪谢
 - [ididChan](https://github.com/ididChan) 
+
+## 参考
+
+- [课本](https://c4pr1c3.gitee.io/cuc-mis/chap0x01/exp.html)
+- [[OpenWrt Wiki] package: hostapd](https://openwrt.org/packages/pkgdata/hostapd)
+- [OpenWrt - Wireless is not Associated](https://forum.openwrt.org/t/wireless-is-not-associated/63291)
+- [嬿晖 - OpenWrt添加管理员/修改管理员用户名](https://blog.csdn.net/qq_43090889/article/details/102684218)
+- [How to use VirtualBox and Hyper-V together on Windows 10](https://www.how2shout.com/how-to/use-virtualbox-and-hyper-v-together-on-windows-10.html#:~:text=Enable%20Hyper-V%20and%20VirtualBox%20together%20at%20the%20same,Machine.%20...%207%20Run%20VM%20on%20Hypervisor.%20)
