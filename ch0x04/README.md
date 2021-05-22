@@ -1,5 +1,6 @@
 # 实验四 移动通信安全概述
 - [实验四 移动通信安全概述](#实验四-移动通信安全概述)
+  - [~~口胡的~~实验目的与要求](#口胡的实验目的与要求)
   - [实验环境](#实验环境)
   - [实验流程](#实验流程)
     - [CVE-2019-1227漏洞环境安装](#cve-2019-1227漏洞环境安装)
@@ -9,6 +10,14 @@
       - [代码编写](#代码编写)
   - [算是一些感想吧](#算是一些感想吧)
   - [参考](#参考)
+
+## ~~口胡的~~实验目的与要求
+
+- [x] 复现 CVE-2019-1227漏洞，编写第一个漏洞利用程序，初步了解移动通信安全。
+- [x] （上课所讲案例）给自己的手机 SIM 卡设置一个新的 PIN 码
+
+
+
 ## 实验环境
 
 - Kali 2020.3
@@ -87,7 +96,7 @@ response = requests.get('http://192.168.189.189/cgi-bin/luci/;stok=6b45a6138759f
 
 #### 关键参数的获取
 
-我们前文中 `stok`、`cookies[sysauth]`等参数都需要再模拟一次登录才能获取。
+我们前文中 `stok`、`cookies['sysauth']`等参数都需要再模拟一次登录才能获取。
 
 <!-- 我们使用 `Burp Suite` 进行抓包，使用「Copy as curl command」命令得到结果。 -->
 
@@ -101,6 +110,8 @@ curl -i -s -k -X $'POST' \
 ``` -->
 
 我们通过再一次模拟登录，搜索其中的 `method:POST` 信息，以相同的方式复制成 curl代码并在第三方网站中转换。
+
+![](imgs/OpenWrt%20-%20Overview%20-%20LuCI%20-%20Login.png)
 
 ```python
 import requests
@@ -125,7 +136,7 @@ data = {
 response = requests.post('http://192.168.189.189/cgi-bin/luci', headers=headers, data=data, verify=False)
 ```
 
-尽管并没有什么用但还是在 BurpSuite 里面重放了一次登录。
+尽管并没有什么用但还是在 BurpSuite 里面重放了一次登录，确定了会返回我们需要的信息。
 
 ![](imgs/loginBurpSuiteSend.png)
 
@@ -146,9 +157,9 @@ class CVE_2019_12272:
         self.host = args.host
         self.username = args.username
         self.password = args.password
+        self.command = args.command
         self.cookies = ''
         self.stok = ''
-        self.command = args.command
 
         self.headers = {
             'Connection': 'keep-alive',
@@ -225,11 +236,12 @@ python main.py -a 192.168.189.189 -u root -p 123456 -c 'ifconfig'
 ## 算是一些感想吧
 
 - CVE-2019-1227 其实漏洞有两个，直接把 `.../bandwidth_status/...` 替换成 `.../wireless_status/...` 可以直接达到对另一个漏洞的利用。
-- （其实不用获取stok也行，直接访问 `...cgi-bin/luci/admin/status...` 不影响代码最终输出结果。。。。。）
+- 其实不用获取stok也行，直接访问 `...cgi-bin/luci/admin/status...` 不影响代码最终输出结果....
 - 感觉写EXP比用鼠标酷炫多了(๑•̀ㅂ•́)و✧。
-- 这次试验其实暴露出很多我个人的问题，比如自己写的时候一直登录不上LuCI，最后看了黄大的视频才解决。还有一个是感觉我写的代码不太优雅（args向self传参有点丑但是又不知道怎么改），python使用还不是很熟练。
+- 这次试验其实暴露出很多我个人的问题，比如自己写的时候一直登录不上LuCI，最后看了黄大的视频才解决。还有一个是感觉我写的代码不太优雅（args向self传参有点丑但是又不知道怎么改），python使用还不是很熟练，这方面需要加强。
 
 ## 参考
 
 - [黄大的课程](https://www.bilibili.com/video/BV1rr4y1A7nz?p=100)
 - [Python - argparse - 命令行选项、参数和子命令解析器](https://docs.python.org/zh-cn/3/library/argparse.html)
+- [CVE-2019-12272 OpenWrt图形化管理界面LuCI命令注入分析](https://hachp1.github.io/posts/Web%E5%AE%89%E5%85%A8/20190710-lucirce.html)
