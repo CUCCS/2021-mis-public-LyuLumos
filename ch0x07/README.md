@@ -19,6 +19,7 @@
 【太长不看版】此部分和课本说明操作基本相同，仅部分变量值发生了改变。
 
 ```bash
+# diff  HuangDa's   Mine
 register_ok的资源唯一标识符:  0x7f060027    0x7f0b0025  
 上述标识符查找：    const v5, 0x7f060027    const v0, 0x7f060027
 DisplayMessageActivity.smali 文件变量名对应修改
@@ -66,12 +67,12 @@ DisplayMessageActivity.smali 文件变量名对应修改
     ./smali/cn/edu/cuc/misdemo/R$string.smali:.field public static final register_ok:I = 0x7f0b0025
     ```
 
-    这里只有变量名和地址和课本所示不同。
+    <!-- 这里只有变量名和地址和课本所示不同。 -->
 
     现在，我们有了``register_ok``的资源唯一标识符：``0x7f0b0025``，使用该唯一标识符进行关键字查找，我们可以定位到这一段代码：
 
     ```
-    ./smali/cn/edu/cuc/misdemo/DisplayMessageActivity.smali:    const v0, 0x7f060027
+    ./smali/cn/edu/cuc/misdemo/DisplayMessageActivity.smali:    const v0, 0x7f060025
     ```
 
     用文本编辑器打开上述``DisplayMessageActivity.smali``，定位到包含该资源唯一标识符所在的代码行。同时，在Android Studio中打开``DisplayMessageActivity.java``源代码，定位到包含``textView.setText(getString(R.string.register_ok));``的代码行，如下图所示：
@@ -115,14 +116,14 @@ DisplayMessageActivity.smali 文件变量名对应修改
     * 改变原来的注册码相等条件判断语句，对布尔类型返回结果直接 **取反**，达到：只要我们没有输入正确的验证码，就能通过验证的“破解”效果；
         * 将 ``if-eqz`` 修改为 ``if-nez``
     * 在执行注册码相等条件判断语句之前，打印出用于和用户输入的注册码进行比较的“正确验证码”变量的值，借助``adb logcat``直接“偷窥”到正确的验证码；
-        * 在 ``invoke-virtual {v2, v3}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z`` 代码之前增加2行打印语句
+        * 在 ``invoke-virtual {v0, v1}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z`` 代码之前增加2行打印语句
 
     ```smali
     # .method private initView()V
     #    .locals 5
     # 注意修改上述initView()方法下的.locals值从8到9
-    const-string v8, "tag-here"
-    invoke-static {v8, v3}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
+    const-string v4, "tag-here"
+	invoke-static {v4, v1}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
     ```
 
 
@@ -160,6 +161,11 @@ C:\Users\LyuJiuyang\AppData\Local\Android\Sdk\build-tools\30.0.2\apksigner.bat s
 
 直接通过“取反”注册码判断逻辑修改后的APK运行和使用效果如下动图所示：
 
+![](imgs/NEZCrack.gif)
+
+通过**插桩**打印语句方式实现的直接“偷窥”正确注册码方法修改后的APK运行和使用效果如下所示：
+
+![](imgs/Tag.png)
 
 
-通过**插桩**打印语句方式实现的直接“偷窥”正确注册码方法修改后的APK运行和使用效果如下动图所示：
+由于Gif文件过大，这里只给出[Gitee链接](https://gitee.com/lyulumos/Image-Hosting-Site/blob/master/TagCrack.gif)。
