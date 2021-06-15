@@ -1,32 +1,31 @@
 # 软件逆向系列实验
 - [软件逆向系列实验](#软件逆向系列实验)
-  - [要求](#要求)
-    - [smali代码分析](#smali代码分析)
-    - [重打包](#重打包)
-    - [重签名](#重签名)
-    - [破解效果展示](#破解效果展示)
+  - [smali代码分析](#smali代码分析)
+  - [重打包](#重打包)
+  - [重签名](#重签名)
+  - [破解效果展示](#破解效果展示)
+  - [要完成的任务或回答的问题](#要完成的任务或回答的问题)
+  - [参考](#参考)
 
 
 
-## 要求
-* 使用apktool反汇编上一章实验中我们开发的Hello World v2版程序，对比Java源代码和smali汇编代码之间的一一对应关系。
-* 对Hello World v2版程序生成的APK文件进行程序图标替换，并进行重打包，要求可以安装到一台未安装过Hello World v2版程序的Android模拟器中。
-* 尝试安装重打包版Hello World v2到一台已经安装过原版Hello World v2程序的模拟器中，观察出错信息并解释原因。
-* 去掉Hello World v2版程序中DisplayMessageActivity.java代码中的那2行日志打印语句后编译出一个新的apk文件，假设文件名是：misdemo-v3.apk，尝试使用课件中介绍的几种软件逆向分析方法来破解我们的认证算法。
 
-### smali代码分析
+
+## smali代码分析
 
 【太长不看版】此部分和课本说明操作基本相同，仅部分变量值发生了改变。
 
-```bash
-# diff  HuangDa's   Mine
-register_ok的资源唯一标识符:  0x7f060027    0x7f0b0025  
-上述标识符查找：    const v5, 0x7f060027    const v0, 0x7f060027
-DisplayMessageActivity.smali 文件变量名对应修改
-.method private initView函数中.local 的值   .locals 8   .local 4
-``` 
+| diff|  HuangDa's|   Mine|
+:--:|:--:|:--:
+`register_ok`的资源唯一标识符: | `0x7f060027`  | ` 0x7f0b0025 ` 
+上述标识符查找  |  `const v5, 0x7f060027 ` |  `const v0, 0x7f0b0025`
+`.method private initView` 函数中 `.local` 的值  | `.locals 8`  | `.local 4`
+`DisplayMessageActivity.smali` 文件变量名对应修改 | / | /
 
 
+----
+
+具体步骤：
 1. 检出[Deliberately Vulnerable Android Hello World](https://github.com/c4pr1c3/DVAHW)最新版代码，在Android Studio中导入该项目；
 2. ``Build`` -> ``Generate Signed APK...``，生成的发布版apk文件位于项目根目录下相对路径：``app/app-release.apk``；
 
@@ -48,38 +47,38 @@ DisplayMessageActivity.smali 文件变量名对应修改
 
 
 
-    如上图所示，是[Deliberately Vulnerable Android Hello World](https://github.com/c4pr1c3/DVAHW)在模拟器中运行，输入注册码错误时的提示信息页面。注意到其中的提示消息内容为：**注册失败**。依据此**关键特征**，在反汇编输出目录下进行**关键字查找**，可以在 ``res/values/strings.xml`` 中找到该关键字的注册变量名为``register_failed``。
+    如上图所示，是[Deliberately Vulnerable Android Hello World](https://github.com/c4pr1c3/DVAHW)在模拟器中运行，输入注册码错误时的提示信息页面。注意到其中的提示消息内容为：**注册失败**。
+4. 依据此**关键特征**，在反汇编输出目录下进行**关键字查找**，可以在 ``res/values/strings.xml`` 中找到该关键字的注册变量名为``register_failed``。
 
     ```bash
     grep '注册失败' -R . 
     # ./res/values/strings.xml:    <string name="register_failed">注册失败</string>
     ```
 
-    用文本编辑器打开 ``res/values/strings.xml`` 查看会在上述代码行下一行发现：
+5. 用文本编辑器打开 ``res/values/strings.xml`` 查看会在上述代码行下一行发现：
 
     ```
     <string name="register_ok">注册成功</string>
     ```
 
-    继续在反汇编输出目录下进行**关键字查找**：``register_ok``，可以发现
+6. 继续在反汇编输出目录下进行**关键字查找**：``register_ok``，可以发现
 
     ```
     ./smali/cn/edu/cuc/misdemo/R$string.smali:.field public static final register_ok:I = 0x7f0b0025
     ```
 
     <!-- 这里只有变量名和地址和课本所示不同。 -->
-
-    现在，我们有了``register_ok``的资源唯一标识符：``0x7f0b0025``，使用该唯一标识符进行关键字查找，我们可以定位到这一段代码：
+7. 现在，我们有了``register_ok``的资源唯一标识符：``0x7f0b0025``，使用该唯一标识符进行关键字查找，我们可以定位到这一段代码：
 
     ```
     ./smali/cn/edu/cuc/misdemo/DisplayMessageActivity.smali:    const v0, 0x7f060025
     ```
 
-    用文本编辑器打开上述``DisplayMessageActivity.smali``，定位到包含该资源唯一标识符所在的代码行。同时，在Android Studio中打开``DisplayMessageActivity.java``源代码，定位到包含``textView.setText(getString(R.string.register_ok));``的代码行，如下图所示：
+8. 用文本编辑器打开上述``DisplayMessageActivity.smali``，定位到包含该资源唯一标识符所在的代码行。同时打开``DisplayMessageActivity.java``源代码，定位到包含``textView.setText(getString(R.string.register_ok));``的代码行，如下图所示：
 
     ![](imgs/Inverse.png)
 
-    根据源代码行号和smali代码中的``.line 39``，我们可以找到Android源代码中的Java代码和Smali代码之间的对应“翻译”关系。上述smali代码注释说明如下：
+9. 根据源代码行号和smali代码中的``.line 39``，我们可以找到Android源代码中的Java代码和Smali代码之间的对应“翻译”关系。上述smali代码注释说明如下：
 
     ```smali
     # 当前smali代码对应源代码的行号
@@ -103,7 +102,7 @@ DisplayMessageActivity.smali 文件变量名对应修改
     move-result-object v0
 
     # 此处的v2赋值发生在 .line 37，需要注意的是这里的v2是一个局部变量（用v表示），并不是参数寄存器（用p表示）。
-    # 当前initView()方法通过 .locals 定义了8个本地寄存器，用于保存局部变量，如下2行代码所示：
+    # 当前initView()方法通过 .locals 定义了4个本地寄存器，用于保存局部变量，如下2行代码所示：
     # .method private initView()V
     #    .locals 4
     # V 表示 setText 的返回结果是 void 类型
@@ -111,7 +110,7 @@ DisplayMessageActivity.smali 文件变量名对应修改
 
     ```
 
-    搞懂了上述smali代码的含义之后，我们破解这个 **简单注册小程序** 的思路可以归纳如下：
+10. 搞懂了上述smali代码的含义之后，我们破解这个 **简单注册小程序** 的思路可以归纳如下：
 
     * 改变原来的注册码相等条件判断语句，对布尔类型返回结果直接 **取反**，达到：只要我们没有输入正确的验证码，就能通过验证的“破解”效果；
         * 将 ``if-eqz`` 修改为 ``if-nez``
@@ -130,7 +129,7 @@ DisplayMessageActivity.smali 文件变量名对应修改
 
     上述2种思路都需要直接修改smali代码，然后对反汇编目录进行**重打包**和**重签名**。
 
-### 重打包
+## 重打包
 
 ```bash
 apktool b app-release
@@ -138,7 +137,7 @@ apktool b app-release
 
 ![](imgs/RePack.png)
 
-### 重签名
+## 重签名
 
 ```bash
 cd app-release/dist/
@@ -157,7 +156,7 @@ C:\Users\LyuJiuyang\AppData\Local\Android\Sdk\build-tools\30.0.2\apksigner.bat s
 
 ![](imgs/ReInstall.png)
 
-### 破解效果展示
+## 破解效果展示
 
 直接通过“取反”注册码判断逻辑修改后的APK运行和使用效果如下动图所示：
 
@@ -168,4 +167,48 @@ C:\Users\LyuJiuyang\AppData\Local\Android\Sdk\build-tools\30.0.2\apksigner.bat s
 ![](imgs/Tag.png)
 
 
-由于Gif文件过大，这里只给出[Gitee链接](https://gitee.com/lyulumos/Image-Hosting-Site/blob/master/TagCrack.gif)。
+由于Gif文件过大，这里给出[Gitee链接](https://gitee.com/lyulumos/Image-Hosting-Site/blob/master/TagCrack.gif)。
+
+这里使用「静态插桩」对应解释了我在[上一章PR时的疑问](https://github.com/CUCCS/2021-mis-public-LyuLumos/pull/4)。
+
+
+
+
+## 要完成的任务或回答的问题
+* 使用apktool反汇编上一章实验中我们开发的Hello World v2版程序，对比Java源代码和smali汇编代码之间的一一对应关系。
+
+    如上述实验报告[smali代码分析](#smali代码分析)第9点所示。
+
+
+* 对Hello World v2版程序生成的APK文件进行程序图标替换，并进行重打包，要求可以安装到一台未安装过Hello World v2版程序的Android模拟器中。
+
+    先找到程序图标的位置。
+
+    ![](imgs/FindIcLaunch.png)
+
+    显然最后面 `...src...`是原来工程文件的，那么我们把前面的图标文件替换成我们自己的文件就好了。
+
+    ![](imgs/ChangeMark.png)
+
+* 尝试安装重打包版Hello World v2到一台已经安装过原版Hello World v2程序的模拟器中，观察出错信息并解释原因。
+
+    报错：
+    ```
+    Performing Incremental Install
+    Serving...
+    All files should be loaded. Notifying the device.
+    Failure [INSTALL_FAILED_UPDATE_INCOMPATIBLE: Package cn.edu.cuc.misdemo signatures do not match previously installed version; ignoring!]
+    Performing Streamed Install
+    adb: failed to install D:\download\DVAHW\DVAHW\app\release\app-release\dist\app-release-signed.apk: Failure [INSTALL_FAILED_UPDATE_INCOMPATIBLE: Package cn.edu.cuc.misdemo signatures do not match previously installed version; ignoring!]
+    ```
+    简单来说就是签名和之前版本不匹配（因为两个签名是一样的）。所以要先卸载掉之前的包再重新安装就好了。上一张图片也可以说明这个问题。
+
+* 去掉Hello World v2版程序中DisplayMessageActivity.java代码中的那2行日志打印语句后编译出一个新的apk文件，假设文件名是：misdemo-v3.apk，尝试使用课件中介绍的几种软件逆向分析方法来破解我们的认证算法。
+
+    如上述实验报告[smali代码分析](#smali代码分析)第10点所示。
+
+
+## 参考
+
+- [黄大 - 移动互联网安全 - 软件逆向系列实验](https://c4pr1c3.gitee.io/cuc-mis/chap0x07/exp.html)
+- [黄大 - GitHub - Deliberately Vulnerable Android Hello World (DVAHW)](https://github.com/c4pr1c3/DVAHW)
