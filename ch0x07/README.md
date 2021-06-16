@@ -1,5 +1,7 @@
 # 软件逆向系列实验
 - [软件逆向系列实验](#软件逆向系列实验)
+  - [实验目的](#实验目的)
+  - [实验环境](#实验环境)
   - [smali代码分析](#smali代码分析)
   - [重打包](#重打包)
   - [重签名](#重签名)
@@ -9,8 +11,15 @@
   - [参考](#参考)
 
 
+## 实验目的
 
+初步认识Android平台逆向工程。
 
+## 实验环境
+
+- IDE: Android Studio 4.1
+- AVD: `Android 11.0 API 30 x86 - Pixel 4`
+- WSL2 Ubuntu 20.04 & Cmder 1.3.18
 
 ## smali代码分析
 
@@ -187,7 +196,7 @@ C:\Users\LyuJiuyang\AppData\Local\Android\Sdk\build-tools\30.0.2\apksigner.bat s
 
     ![](imgs/FindIcLaunch.png)
 
-    显然最后面 `...src...`是原来工程文件的，那么我们把前面的图标文件替换成我们自己的文件就好了。
+    显然最后面 `...src...`是原来工程文件的，那么我们把前面的图标文件替换成我们自己的文件后重新打包签名就好了。
 
     ![](imgs/ChangeMark.png)
 
@@ -202,7 +211,7 @@ C:\Users\LyuJiuyang\AppData\Local\Android\Sdk\build-tools\30.0.2\apksigner.bat s
     Performing Streamed Install
     adb: failed to install D:\download\DVAHW\DVAHW\app\release\app-release\dist\app-release-signed.apk: Failure [INSTALL_FAILED_UPDATE_INCOMPATIBLE: Package cn.edu.cuc.misdemo signatures do not match previously installed version; ignoring!]
     ```
-    简单来说就是签名和之前版本不匹配（因为两个签名是一样的）。所以要先卸载掉之前的包再重新安装就好了。上一张图片也可以说明这个问题。
+    报错信息为签名和之前版本不匹配（因为两个安装包版本号是一样的）。所以先卸载掉之前的包再重新安装就好了。上一张图片也可以说明这个问题。
 
 * 去掉Hello World v2版程序中DisplayMessageActivity.java代码中的那2行日志打印语句后编译出一个新的apk文件，假设文件名是：misdemo-v3.apk，尝试使用课件中介绍的几种软件逆向分析方法来破解我们的认证算法。
 
