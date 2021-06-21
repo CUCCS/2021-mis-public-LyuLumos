@@ -218,9 +218,8 @@ adb shell input keyevent 3
 
 按照黄大的课本操作就可以了。
 
-<!-- ```java
 
-``` -->
+![](imgs/HelloWorldv2.gif)
 
 ### 要回答的问题
 
