@@ -1,4 +1,4 @@
-# Android 缺陷应用漏洞攻击实验
+<!-- # Android 缺陷应用漏洞攻击实验
 
 ## 实验目的
 - 理解 Android 经典的组件安全和数据安全相关代码缺陷原理和漏洞利用方法；
@@ -199,4 +199,4 @@ adb shell content query --uri content://com.android.insecurebankv2.TrackUserCont
 - [揭师姐](https://github.com/YanhuiJessica)
 - [紫紫师姐](https://github.com/purplezi)
 - [夏教](https://github.com/xyw5vplus1)
-- [id师姐](https://github.com/ididChan)
+- [id师姐](https://github.com/ididChan) -->
