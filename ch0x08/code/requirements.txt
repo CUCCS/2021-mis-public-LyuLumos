@@ -1,0 +1,7 @@
+protobuf
+pyhamcrest
+pyopenssl
+pyyaml
+service_identity
+twisted
+wheel

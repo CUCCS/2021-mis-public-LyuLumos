@@ -13,9 +13,9 @@
 - [x] Android Application patching + Weak Auth
 - [x] Exploiting Android Broadcast Receivers
 - [x] Exploiting Android Content Provider
-- [ ] （可选）使用不同于 Walkthroughs 中提供的工具或方法达到相同的漏洞利用攻击效果；
+- [x] （可选）使用不同于 Walkthroughs 中提供的工具或方法达到相同的漏洞利用攻击效果；
 推荐 drozer
-<!-- 
+
 ## 实验流程
 ### 搭建InsecureBankv2环境
 
@@ -146,6 +146,18 @@ adb shell content query --uri content://com.android.insecurebankv2.TrackUserCont
 
 ![](imgs/AndroidContent.png)
 
+---
+
+### **drozer**
+
+- 子实验环境：
+  - Python 2.7
+  - drover 2.4.4
+  - JDK、SDK环境同本实验环境
+
+由于drozer部分篇幅过长，独立列为[报告](Drozer.md)。
+
+---
 
 ## 遇到的问题和解决
 
@@ -176,6 +188,7 @@ adb shell content query --uri content://com.android.insecurebankv2.TrackUserCont
 - [c4pr1c3 - GitHub - Android-InsecureBankv2](https://github.com/c4pr1c3/Android-InsecureBankv2)
 - [Hacktivities - InfoSec Write-ups - Android InsecureBankv2 Walkthrough: Part 1](https://infosecwriteups.com/android-insecurebankv2-walkthrough-part-1-9e0788ba5552)
 - [FlappyPig - CTF特训营：技术详解、解题方法与竞赛技巧 - 第五篇：CTF之APK](https://book.douban.com/subject/35120456/)
+- [周绪龙 - 知乎 - APP的安全性测试指南——测试工具Drozer](https://zhuanlan.zhihu.com/p/157219023)
 
 ## 致谢
 
@@ -186,4 +199,4 @@ adb shell content query --uri content://com.android.insecurebankv2.TrackUserCont
 - [揭师姐](https://github.com/YanhuiJessica)
 - [紫紫师姐](https://github.com/purplezi)
 - [夏教](https://github.com/xyw5vplus1)
-- [id师姐](https://github.com/ididChan) -->
+- [id师姐](https://github.com/ididChan)
