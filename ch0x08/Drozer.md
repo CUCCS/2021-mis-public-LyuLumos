@@ -194,4 +194,4 @@ Drozer提供了一个自动扫描模块，可以汇集猜测路径，并提出�
 
   注意只添加 `uses-permission` 是无效的，可以通过 `drozer agent build -p com.android.insecurebankv2.MyBroadCastReceiverPermission` 得到一个没有该权限限制的apk，必须添加签名。
 
-[-> 主报告链接](README.md)
+[-> 主报告链接](https://github.com/CUCCS/2021-mis-public-LyuLumos/blob/ch0x08/ch0x08/README.md#%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3)

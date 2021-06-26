@@ -21,8 +21,9 @@
 
 > **引用声明**\
 > 参考此报告请附上引用链接 \
-> https://github.com/CUCCS/2021-mis-public-LyuLumos/blob/ch0x08/ch0x08/README.md\
-> https://github.com/CUCCS/2021-mis-public-LyuLumos/blob/ch0x08/ch0x08/Drozer.md
+> https://github.com/CUCCS/2021-mis-public-LyuLumos/blob/ch0x08/ch0x08/README.md
+
+
 ## 实验目的
 - 理解 Android 经典的组件安全和数据安全相关代码缺陷原理和漏洞利用方法；
 - 掌握 Android 模拟器运行环境搭建和 ADB 使用；
@@ -117,7 +118,7 @@ dinesh/Dinesh@123$
 
 ![](imgs/WeakAuth.png)
 
-我们从整个文件的入口开始看起，发现是否添加CreateUserButton需要判断string(2131165258)的值。
+我们从整个文件的入口开始看起，发现是否添加 `CreateUserButton` 需要判断 `string(2131165258)`的值。
 
 在 `R.class` 中找到这个ID代表的关键字。
 
@@ -162,6 +163,7 @@ adb shell am broadcast -a theBroadcast -n com.android.insecurebankv2/com.android
 
 可以看到传递过来的参数（即登录的用户名）被插入了SQLLite数据库。
 
+![](imgs/SQL.png)
 
 那我们使用多个账号登录之后，运行
 
