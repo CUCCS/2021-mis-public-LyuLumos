@@ -82,7 +82,7 @@ dinesh/Dinesh@123$
 
 ### 预处理
 
-这里我遵从[参考三](#参考)的建议使用Android Killer，[下文](#关于android-killer)会简单介绍这个软件。
+这里我遵从[参考五](#参考)的建议使用Android Killer，[下文](#关于android-killer)会简单介绍这个软件。
 
 ![](imgs/AndroidKillerOverview.png)
 
@@ -181,7 +181,7 @@ adb shell content query --uri content://com.android.insecurebankv2.TrackUserCont
 
 - 子实验环境：
   - Python 2.7
-  - drover 2.4.4
+  - drozer 2.4.4
   - JDK、SDK环境同本实验环境
 
 由于drozer部分篇幅过长，独立列为[报告](Drozer.md)。
@@ -192,7 +192,7 @@ adb shell content query --uri content://com.android.insecurebankv2.TrackUserCont
 
 1. 长时间未关闭电脑和AVD，导致AVD桌面黑屏，底部导航栏消失。
    
-   在重启无效的情况下，删除了原来的AVD并重新下载后正常。
+   在重启无效的情况下，更换了另一个AVD。
 
 
 ## 其他
