@@ -1,10 +1,37 @@
-<!-- # Android 缺陷应用漏洞攻击实验
+# Android 缺陷应用漏洞攻击实验
+- [Android 缺陷应用漏洞攻击实验](#android-缺陷应用漏洞攻击实验)
+  - [实验目的](#实验目的)
+  - [实验环境](#实验环境)
+  - [实验要求](#实验要求)
+  - [实验流程](#实验流程)
+    - [搭建InsecureBankv2环境](#搭建insecurebankv2环境)
+    - [预处理](#预处理)
+    - [Developer Backdoor](#developer-backdoor)
+    - [Insecure Logging](#insecure-logging)
+    - [Android Application patching + Weak Auth](#android-application-patching--weak-auth)
+    - [Exploiting Android Broadcast Receivers](#exploiting-android-broadcast-receivers)
+    - [Exploiting Android Content Provider](#exploiting-android-content-provider)
+    - [**drozer子实验**](#drozer子实验)
+  - [遇到的问题和解决](#遇到的问题和解决)
+  - [其他](#其他)
+    - [关于Android Killer](#关于android-killer)
+  - [参考](#参考)
+  - [致谢](#致谢)
 
+
+> **引用声明**\
+> 参考此报告请附上引用链接 \
+> https://github.com/CUCCS/2021-mis-public-LyuLumos/blob/ch0x08/ch0x08/README.md\
+> https://github.com/CUCCS/2021-mis-public-LyuLumos/blob/ch0x08/ch0x08/Drozer.md
 ## 实验目的
 - 理解 Android 经典的组件安全和数据安全相关代码缺陷原理和漏洞利用方法；
 - 掌握 Android 模拟器运行环境搭建和 ADB 使用；
 ## 实验环境
+- Android Studio 4.1.0
+- JDK（内置）1.8
+- SDK（内置）
 - Android-InsecureBankv2
+- Python 3
 ## 实验要求
 详细记录实验环境搭建过程；
 至少完成以下 实验 ：
@@ -148,7 +175,7 @@ adb shell content query --uri content://com.android.insecurebankv2.TrackUserCont
 
 ---
 
-### **drozer**
+### **drozer子实验**
 
 - 子实验环境：
   - Python 2.7
@@ -179,17 +206,19 @@ adb shell content query --uri content://com.android.insecurebankv2.TrackUserCont
 
 微软官网文档给出了沙盒运行的[必备条件](https://docs.microsoft.com/zh-cn/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview#prerequisites)。
 
-但是经过测试，该软件查看日志（logcat）搜索极其缓慢且易卡死，故所有涉及到日志的操作仍使用logcat。
+但是经过测试，该软件查看日志（logcat）搜索极其缓慢且易卡死，故所有涉及到日志的操作仍使用`adb logcat`。
 
 
 
 ## 参考
 
 - [c4pr1c3 - GitHub - Android-InsecureBankv2](https://github.com/c4pr1c3/Android-InsecureBankv2)
+- [c4pr1c3 - GitHub - MIS PPT](https://c4pr1c3.github.io/cuc-mis-ppt/chap0x08.md.html#/activity-phishing)
+- [Rostik Slipetskyy - GitHub - Vulnerable Android Broadcast Receivers](https://oldbam.github.io/android/security/android-vulnerabilities-insecurebank-broadcast-receivers)
 - [Hacktivities - InfoSec Write-ups - Android InsecureBankv2 Walkthrough: Part 1](https://infosecwriteups.com/android-insecurebankv2-walkthrough-part-1-9e0788ba5552)
 - [FlappyPig - CTF特训营：技术详解、解题方法与竞赛技巧 - 第五篇：CTF之APK](https://book.douban.com/subject/35120456/)
 - [周绪龙 - 知乎 - APP的安全性测试指南——测试工具Drozer](https://zhuanlan.zhihu.com/p/157219023)
-
+- [StackOverflow - Windows cmd encoding change causes Python crash](https://stackoverflow.com/questions/878972/windows-cmd-encoding-change-causes-python-crash)
 ## 致谢
 
 本课程所有作业结束，向这学期所有帮助过我的老师和师哥师姐们表示由衷感谢，无论是知识上的还是精神上的。
@@ -199,4 +228,4 @@ adb shell content query --uri content://com.android.insecurebankv2.TrackUserCont
 - [揭师姐](https://github.com/YanhuiJessica)
 - [紫紫师姐](https://github.com/purplezi)
 - [夏教](https://github.com/xyw5vplus1)
-- [id师姐](https://github.com/ididChan) -->
+- [id师姐](https://github.com/ididChan)

@@ -1,4 +1,4 @@
-<!-- # 基于drozer的Android 缺陷应用漏洞攻击子实验
+# 基于drozer的Android 缺陷应用漏洞攻击子实验
 
 - [基于drozer的Android 缺陷应用漏洞攻击子实验](#基于drozer的android-缺陷应用漏洞攻击子实验)
   - [安装](#安装)
@@ -8,6 +8,7 @@
     - [3. 识别攻击面](#3-识别攻击面)
     - [4. 查看详细的攻击面](#4-查看详细的攻击面)
     - [5. 根据具体的攻击面进行攻击](#5-根据具体的攻击面进行攻击)
+  - [尝试修复](#尝试修复)
 
 ## 安装
 
@@ -147,6 +148,8 @@ dz> run app.provider.info -a com.android.insecurebankv2
 
 我们可以启动暴露的activity、provider、broadcast以及service。
 
+---
+
 比如对内容暴露面，
 
 Drozer提供了一个自动扫描模块，可以汇集猜测路径，并提出一个访问的列表。
@@ -155,11 +158,40 @@ Drozer提供了一个自动扫描模块，可以汇集猜测路径，并提出�
 
 这其实完成了 `Exploiting Android Content Provider` 任务。
 
+---
+
+
 又比如对广播接收面，
 
 ![](imgs/DrozerMessage.png)
 
 这其实完成了 `Exploiting Android Broadcast Receivers` 任务。
 
+---
 
-[-> 主报告链接](README.md) -->
+又又比如对控件安全级别面，
+
+![](imgs/PassLogin.png)
+
+这样就可以绕过登录界面，直接进入登录后的界面。（我也不知道这是哪个任务┑(￣ω ￣)┍ ）
+
+## 尝试修复
+
+遵照黄大的PPT，修复的整体思路为：
+
+1. 不需要导出的组件，设置组件属性 `android:exported=false`
+  ![](imgs/FixSetFalse.png)
+
+1. 对于需要导出的组件需要做好:\
+  (1) 权限校验和异常处理，避免应用出现拒绝服务\
+  (2) 建议添加自定义signature或signatureOrSystem级别的私有权限保护
+
+  ![](imgs/Vimdiff.png)
+
+  之后重打包重签名，重新使用相同的命令运行，发现被阻止。
+
+  ![](imgs/FixApp.png)
+
+  注意只添加 `uses-permission` 是无效的，可以通过 `drozer agent build -p com.android.insecurebankv2.MyBroadCastReceiverPermission` 得到一个没有该权限限制的apk，必须添加签名。
+
+[-> 主报告链接](README.md)
